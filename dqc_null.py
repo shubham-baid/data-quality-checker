@@ -58,11 +58,6 @@ def check_null(db_name, table_name, columns):
     else:
         print("No null values found in any column.")
 
-    # If there are null values, print a message
-    if null_rows:
-        print("Null Values Found in {}".format(table_name))
-    else:
-        print("All is well")
 
     # Close the connection
     conn.close()
