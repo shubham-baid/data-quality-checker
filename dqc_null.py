@@ -38,10 +38,6 @@ def check_null(db_name, table_name, columns):
 
     # Fetch the results
     null_rows = cursor.fetchall()
-    print(null_rows)
-    print(len(null_rows))
-    numerate = enumerate(null_rows)
-    print(numerate)
     
     
     # If there are null values, print the column names and row positions
