@@ -1,0 +1,49 @@
+from fuzzywuzzy import fuzz
+from fuzzywuzzy import process
+import mysql.connector
+
+
+
+def find_similar_data(db_name, table_name, column_name, threshold):
+    
+    # Connect to the database
+    conn = mysql.connector.connect(host='localhost',port= 3306,user='root',password='root',database= db_name)
+
+    # Create a cursor object to execute SQL queries
+    cursor = conn.cursor()
+
+    # Fetch all distinct values from the specified column
+    cursor.execute(f"SELECT DISTINCT {column_name} FROM {table_name} WHERE {column_name} IS NOT NULL")
+    distinct_values = cursor.fetchall()
+
+    values = [row[0] for row in distinct_values]
+    print("Distinct column values are:",values)
+    
+    
+    # Initialize a dictionary to store similar data
+    similar_data = {}
+
+
+    # Perform fuzzy string matching
+    for value in values:
+        matches = process.extract(value, values, scorer=fuzz.ratio, limit=3)
+        similar_matches = [match for match in matches if match[1] >= threshold]
+        if len(similar_matches) > 1:
+            similar_data[value] = similar_matches
+    
+    print(similar_data)
+
+    
+    # Close the connection
+    conn.close()
+
+
+
+
+# Example usage
+db_name = "test"
+table_name = "fuzzy_table"
+column_name = "column_name"  # Replace with the actual column name
+threshold = 80  # Adjust the threshold as needed (higher values are stricter)
+
+find_similar_data(db_name, table_name, column_name, threshold) 

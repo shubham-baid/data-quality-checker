@@ -52,4 +52,3 @@ db_name = 'test'
 table_name = 'dummy_table'
 
 date_min_max(db_name, table_name)
-
